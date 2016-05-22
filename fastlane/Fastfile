@@ -94,7 +94,7 @@ platform :ios do
     #deploygate(
     #  api_token: "",
     #  user: "",
-    #  message: "ローカルビルド(Debug)",
+    #  message: "CIビルド(Debug)",
     #)
   end
 
