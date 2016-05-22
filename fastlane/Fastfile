@@ -1,0 +1,146 @@
+# Customise this file, documentation can be found here:
+# https://github.com/fastlane/fastlane/tree/master/fastlane/docs
+# All available actions: https://github.com/fastlane/fastlane/blob/master/fastlane/docs/Actions.md
+# can also be listed using the `fastlane actions` command
+
+# Change the syntax highlighting to Ruby
+# All lines starting with a # are ignored when running `fastlane`
+
+# If you want to automatically update fastlane if a new version is available:
+# update_fastlane
+
+# This is the minimum version number required.
+# Update this, if you use features of a newer version
+fastlane_version "1.89.0"
+
+default_platform :ios
+
+platform :ios do
+  before_all do
+    # ENV["SLACK_URL"] = "https://hooks.slack.com/services/..."
+    carthage(platform: "iOS" )
+    cocoapods
+
+  end
+
+  desc "Runs all the tests"
+  lane :local_test do
+    scan(workspace: "iosProjectTemplate.xcworkspace",
+    scheme: "iosProjectTemplate",
+    clean: true,
+    device: "iPhone5s",
+    configuration: "Debug",
+    sdk: "iphonesimulator9.3",
+    skip_slack: true)
+  end
+
+  lane :bitrise_test do
+    scan(workspace: "iosProjectTemplate.xcworkspace",
+    scheme: "iosProjectTemplate",
+    clean: true,
+    device: "iPhone5s",
+    configuration: "Debug",
+    sdk: "iphonesimulator9.3",
+    skip_slack: true)
+  end
+
+
+  desc "Runs Deploy"
+  lane :local_deploy do
+    # プロビジョンファイル更新
+    #sh "git -C myprovisionfiles pull"
+    #ENV["GYM_PROVISIONING_PROFILE_PATH"] = "./fastlane/myprovisionfiles/hogehoge.mobileprovision"
+
+    directory = 'build/'
+    gym(
+      workspace: "iosProjectTemplate.xcworkspace",
+      configuration: "Debug",
+      scheme: "iosProjectTemplate",
+      silent: false,
+      clean: true,
+      output_directory: directory,
+      output_name: "iosProjectTemplateDebug.ipa",
+      export_method: "ad-hoc",
+      use_legacy_build_api: true
+    )
+
+    #DeployGateへデプロイ
+    #deploygate(
+    #  api_token: "",
+    #  user: "",
+    #  message: "ローカルビルド(Debug)",
+    #)
+  end
+
+  lane :bitrise_deploy do
+    # プロビジョンファイル更新
+    #sh "git clone "ここにURL" myprovisionfiles"
+    #ENV["GYM_PROVISIONING_PROFILE_PATH"] = "./fastlane/myprovisionfiles/hogehoge.mobileprovision"
+
+    directory = 'build/'
+    gym(
+      workspace: "iosProjectTemplate.xcworkspace",
+      configuration: "Debug",
+      scheme: "iosProjectTemplate",
+      silent: false,
+      clean: true,
+      output_directory: directory,
+      output_name: "iosProjectTemplateDebug.ipa",
+      export_method: "ad-hoc",
+      use_legacy_build_api: true
+    )
+
+    #DeployGateへデプロイ
+    #deploygate(
+    #  api_token: "",
+    #  user: "",
+    #  message: "ローカルビルド(Debug)",
+    #)
+  end
+
+
+
+  desc "Submit a new Beta Build to Apple TestFlight"
+  desc "This will also make sure the profile is up to date"
+  lane :beta do
+    # match(type: "appstore") # more information: https://codesigning.guide
+    gym(scheme: "sample") # Build your app - more options available
+    pilot
+
+    # sh "your_script.sh"
+    # You can also use other beta testing services here (run `fastlane actions`)
+  end
+
+  desc "Deploy a new version to the App Store"
+  lane :appstore do
+    # match(type: "appstore")
+    # snapshot
+    gym(scheme: "sample") # Build your app - more options available
+    deliver(force: true)
+    # frameit
+  end
+
+  # You can define as many lanes as you want
+
+  after_all do |lane|
+    # This block is called, only if the executed lane was successful
+
+    # slack(
+    #   message: "Successfully deployed new App Update."
+    # )
+  end
+
+  error do |lane, exception|
+    # slack(
+    #   message: exception.message,
+    #   success: false
+    # )
+  end
+end
+
+
+# More information about multiple platforms in fastlane: https://github.com/fastlane/fastlane/blob/master/fastlane/docs/Platforms.md
+# All available actions: https://github.com/fastlane/fastlane/blob/master/fastlane/docs/Actions.md
+
+# fastlane reports which actions are used
+# No personal data is recorded. Learn more at https://github.com/fastlane/enhancer

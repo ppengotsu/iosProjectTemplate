@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuites tests='3' failures='0'>
+  <testsuite name='iosProjectTemplateTests.iosProjectTemplateTests' tests='2' failures='0'>
+    <testcase classname='iosProjectTemplateTests.iosProjectTemplateTests' name='testExample' time='0.001'/>
+    <testcase classname='iosProjectTemplateTests.iosProjectTemplateTests' name='testPerformanceExample' time='0.265'/>
+  </testsuite>
+  <testsuite name='iosProjectTemplateUITests.iosProjectTemplateUITests' tests='1' failures='0'>
+    <testcase classname='iosProjectTemplateUITests.iosProjectTemplateUITests' name='testExample' time='3.450'/>
+  </testsuite>
+</testsuites>
