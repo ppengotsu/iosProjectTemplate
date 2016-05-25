@@ -53,6 +53,22 @@ bundelerでインストールしたものとprovisionfileなどの更新
   
   ```
   
+  
+### Cocoapodsのみ更新
+  
+
+  ```shell.sh
+rbenv exec bundle exec pod install
+  
+  ```
+### Rubyのバージョン固定
+  
+
+  ```shell.sh
+rbenv local 2.1.0 
+  
+  ```
+  
 
 
 ## ローカル：テスト実行
